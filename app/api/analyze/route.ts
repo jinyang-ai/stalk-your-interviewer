@@ -26,21 +26,21 @@ export async function POST(request: NextRequest) {
 
     // Transform the raw profile data to match our interface
     const profile: LinkedInProfile = {
-      name: rawProfile.fullName || rawProfile.name || 'Unknown',
-      headline: rawProfile.headline || '',
-      location: rawProfile.location || '',
-      summary: rawProfile.summary || rawProfile.about || '',
-      skills: rawProfile.skills || [],
-      experience: (rawProfile.experience || []).map((exp: any) => ({
-        title: exp.title || '',
-        company: exp.companyName || exp.company || '',
-        duration: exp.duration || exp.period || '',
-        description: exp.description || exp.summary || ''
-      })),
-      education: (rawProfile.education || []).map((edu: any) => ({
-        degree: edu.degree || edu.field || '',
-        school: edu.school || edu.schoolName || ''
-      }))
+      name: String(rawProfile?.fullName || rawProfile?.name || 'Unknown'),
+      headline: String(rawProfile?.headline || ''),
+      location: String(rawProfile?.location || ''),
+      summary: String(rawProfile?.summary || rawProfile?.about || ''),
+      skills: Array.isArray(rawProfile?.skills) ? rawProfile.skills.map(String) : [],
+      experience: Array.isArray(rawProfile?.experience) ? rawProfile.experience.map((exp: any) => ({
+        title: String(exp?.title || ''),
+        company: String(exp?.companyName || exp?.company || ''),
+        duration: String(exp?.duration || exp?.period || ''),
+        description: String(exp?.description || exp?.summary || '')
+      })) : [],
+      education: Array.isArray(rawProfile?.education) ? rawProfile.education.map((edu: any) => ({
+        degree: String(edu?.degree || edu?.field || ''),
+        school: String(edu?.school || edu?.schoolName || '')
+      })) : []
     };
 
     // Analyze with Gemini
