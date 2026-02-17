@@ -25,20 +25,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Transform the raw profile data to match our interface
+    const basicInfo = rawProfile?.basic_info || {};
     const profile: LinkedInProfile = {
-      name: String(rawProfile?.fullName || rawProfile?.name || 'Unknown'),
-      headline: String(rawProfile?.headline || ''),
-      location: String(rawProfile?.location || ''),
-      summary: String(rawProfile?.summary || rawProfile?.about || ''),
-      skills: Array.isArray(rawProfile?.skills) ? rawProfile.skills.map(String) : [],
+      name: String(basicInfo?.fullname || basicInfo?.first_name || rawProfile?.fullName || rawProfile?.name || 'Unknown'),
+      headline: String(basicInfo?.headline || rawProfile?.headline || ''),
+      location: String(basicInfo?.location?.full || basicInfo?.location || rawProfile?.location || ''),
+      summary: String(basicInfo?.about || rawProfile?.summary || rawProfile?.about || ''),
+      skills: Array.isArray(basicInfo?.top_skills) ? basicInfo.top_skills.map(String) : Array.isArray(rawProfile?.skills) ? rawProfile.skills.map(String) : [],
       experience: Array.isArray(rawProfile?.experience) ? rawProfile.experience.map((exp: any) => ({
         title: String(exp?.title || ''),
-        company: String(exp?.companyName || exp?.company || ''),
+        company: String(exp?.company || exp?.companyName || ''),
         duration: String(exp?.duration || exp?.period || ''),
         description: String(exp?.description || exp?.summary || '')
       })) : [],
       education: Array.isArray(rawProfile?.education) ? rawProfile.education.map((edu: any) => ({
-        degree: String(edu?.degree || edu?.field || ''),
+        degree: String(edu?.degree_name && edu?.field_of_study ? `${edu.degree_name}, ${edu.field_of_study}` : edu?.degree || edu?.field || ''),
         school: String(edu?.school || edu?.schoolName || '')
       })) : []
     };
