@@ -37,7 +37,7 @@ export interface CheatSheetResult {
 }
 
 export const analyzeInterviewer = async (profile: LinkedInProfile): Promise<CheatSheetResult> => {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
   const prompt = `You are an executive coach who specializes in interview preparation. You've coached 3,000+ candidates. Your secret weapon: you research the interviewer as deeply as the candidate researches the company. You look at the interviewer's career, their values, their communication style, and you give the candidate a tactical playbook.
 
